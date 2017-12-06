@@ -1,0 +1,12 @@
+{
+  "name": "password-encryptor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "prompt": "^1.0.0"
+  }
+}
