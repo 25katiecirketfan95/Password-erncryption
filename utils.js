@@ -1,6 +1,7 @@
 var crypto = require('crypto');
 var prompt = require('prompt');
 var fs = require('fs');
+var stringUtils = require('./stringUtils');
 
 
 
@@ -37,7 +38,7 @@ function newAccount() {
 			password: hash,
 			username: result.username
 		}
-
+		//ToDo: check if a username has 8 or more characters and also has Uppercase, Lowercase and Numbers ('while' or 'for' Loops)
 		var json = fs.readFileSync("./data.json");
 		var credentialsArray = JSON.parse(json);
 
@@ -67,14 +68,18 @@ function login() {
 		}
 
 		var json = fs.readFileSync("./data.json");
-		var registeredCredentials = JSON.parse(json);
+		var credentialsArray = JSON.parse(json);
 
-		if (credentials.password == registeredCredentials.password) {
-			console.log('Login sucessful')
+		var exsistingPassword = credentialsArray.filter(function (item) {
+			return item.password == credentials.password;
+		});
+		if (exsistingPassword.length > 0) {
+			var json = JSON.stringify(credentialsArray, null, 3);
+			fs.writeFileSync("./data.json", json);
 		} else {
-			console.log('error')
+			console.log('Try Again')
 		}
-	}); //todo: Array to search for passwords in data.json
+	});
 }
 
 function generateHash(text) {
