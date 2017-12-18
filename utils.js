@@ -7,45 +7,47 @@ prompt.start();
 
 
 
-function account() {
+function requestIfUserHasAnAccount() {
 
 	var schema = {
 		properties: {
 			input: {
-				description: 'Do you already have an account?',
+				description: 'Do you already have an account (Y/N)?',
 			}
 		}
 	};
 
-
 	prompt.get(schema, function (err, result) {
 		console.log(result.input);
-		if ('Yes' == result.input) {
+		if ('Y' == result.input.toUpperCase()) {
 			login();
-		} else {
+		} else if ('N' == result.input.toUpperCase()){
 			newAccount();
+		}
+		else {
+			console.error('Please press Y or N.');
+			requestIfUserHasAnAccount();
 		}
 	});
 }
 
-// New Login Details
-function newAccount() {
+function register() {
 
 	prompt.get(["username", "password"], function (err, result) {
 
-		var hash = generateHash(result.password)
+		var hash = generateHash(result.clapassword)
 		var credentials = {
 			password: hash,
 			username: result.username
 		}
 
 		if (credentials.username.length >= 8) {
-
+			usernameCharacters()
 		} else {
-			console.log('You need at least eight characters!')
+			console.log('You need at least eight characters! Make sure you have at least one upper case, one lower case and one number in your username!')
 		}
 
-
+		function usernameCharacters()
 		for (var i = 0; i < credentials.username.length; i++); {
 			var char = credentials.username.charAt(i);
 
@@ -56,7 +58,7 @@ function newAccount() {
 				console.log("At least one lower case Character and one Number is required!");
 			}
 			else if (!(isLowercase)) {
-				console.log("At least one upper case4 Character and Number required!");
+				console.log("At least one upper case Character and Number required!");
 			}
 			else if (!(isNumber)) {
 				console.log("At least one uppercase and lower case letter required!");
@@ -64,8 +66,6 @@ function newAccount() {
 
 			}
 		}
-
-
 
 		var json = fs.readFileSync("./data.json");
 		var credentialsArray = JSON.parse(json);
